@@ -24,19 +24,27 @@ source assets → ImageMagick (compose/overlay frames) → PNG frames → FFmpeg
 
 ## Usage
 
-### 1. Add your source assets
+### 1. Run
 
-Place your input files in your local share folder. The default example reads from `input.txt` (one entry per line) and renders each as a styled PNG frame.
-
-To adapt for images (e.g. sports photos), place your images in an `images\` subfolder and update the frame generation section of `LetsPlay.ps1` accordingly.
-
-### 2. Run
+For a text file (one entry per line):
 
 ```powershell
-.\Start-Sandbox.ps1 -SharePath "C:\YourShareFolder"
+.\Start-Sandbox.ps1 -SharePath "C:\YourShareFolder" -InputPath "C:\Downloads\Quotes.txt"
 ```
 
-The sandbox will launch, process your assets, and write the output MP4 to your share folder. Explorer will open automatically when complete.
+For a folder of images:
+
+```powershell
+.\Start-Sandbox.ps1 -SharePath "C:\YourShareFolder" -InputPath "C:\Pics\Gallery01"
+```
+
+The script will:
+- Create `-SharePath` if it doesn't exist
+- Copy `LetsPlay.ps1` and `sandbox.wsb` into the share folder
+- Copy a text file as `input.txt`, or copy image folder contents into `images\`
+- Patch and launch the sandbox automatically
+
+Explorer will open automatically when processing is complete.
 
 > `sandbox.wsb` is used as a template — the `HostFolder` is patched at runtime using `-SharePath`. No manual edits to `sandbox.wsb` are needed.
 
