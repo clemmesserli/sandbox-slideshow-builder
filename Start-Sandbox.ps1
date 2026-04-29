@@ -1,7 +1,7 @@
-$wsbPath = "C:\MySandboxShare\sandbox.wsb"
+$wsbPath = Join-Path $PSScriptRoot "sandbox.wsb"
 
 if (!(Test-Path $wsbPath)) {
-	Write-Error "sandbox.wsb not found"
+	Write-Error "sandbox.wsb not found at: $wsbPath"
 	exit
 }
 

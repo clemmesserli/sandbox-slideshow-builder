@@ -140,17 +140,17 @@ $ffmpeg = Get-ChildItem $ffExtract -Recurse -Filter ffmpeg.exe | Select-Object -
 if (-not $ffmpeg) { throw "ffmpeg.exe not found" }
 
 # =============================
-# Load Quotes
+# Load Input
 # =============================
-$quotesFile = Join-Path $shared "quotes.txt"
+$inputFile = Join-Path $shared "input.txt"
 
-if (!(Test-Path $quotesFile)) { throw "quotes.txt not found" }
+if (!(Test-Path $inputFile)) { throw "input.txt not found" }
 
-$quotes = Get-Content $quotesFile | Where-Object { $_.Trim() -ne "" }
+$quotes = Get-Content $inputFile | Where-Object { $_.Trim() -ne "" }
 
-if ($quotes.Count -eq 0) { throw "quotes.txt is empty" }
+if ($quotes.Count -eq 0) { throw "input.txt is empty" }
 
-Write-Host "Loaded $($quotes.Count) quotes"
+Write-Host "Loaded $($quotes.Count) items"
 
 # =============================
 # Generate PNGs
@@ -171,7 +171,7 @@ Write-Step 'Generate PNGs' {
 	$jobs = @()
 
 	foreach ($item in $indexed) {
-		$outFile = Join-Path $imgDir ("quote_{0:D3}.png" -f $item.Index)
+		$outFile = Join-Path $imgDir ("frame_{0:D3}.png" -f $item.Index)
 
 		if (Test-Path $outFile) {
 			Write-Host "Skipping existing image: $outFile"
@@ -181,7 +181,7 @@ Write-Step 'Generate PNGs' {
 		$jobs += Start-Job -ScriptBlock {
 			param($magickExe, $fontPath, $width, $height, $quote, $outFile, $tools)
 
-			$tmpTxt = Join-Path $tools "quote_$PID.txt"
+			$tmpTxt = Join-Path $tools "frame_$PID.txt"
 			Set-Content -Path $tmpTxt -Value $quote -Encoding UTF8
 
 			$magickArgs = @(
@@ -228,7 +228,7 @@ Write-Step 'Generate PNGs' {
 # =============================
 # Generate Video (idempotent)
 # =============================
-$videoOut = Join-Path $shared "Quotes.mp4"
+$videoOut = Join-Path $shared "slideshow.mp4"
 
 Write-Step 'Generate Video' {
 	if (Test-Path $videoOut) {
@@ -240,7 +240,7 @@ Write-Step 'Generate Video' {
 			'-y',
 			'-stream_loop', '0',
 			'-framerate', '0.33',
-			'-i', "$imgDir\quote_%03d.png",
+			'-i', "$imgDir\frame_%03d.png",
 			'-c:v', 'libx264',
 			'-pix_fmt', 'yuv420p',
 			'-r', '30',

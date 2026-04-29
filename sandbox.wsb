@@ -1,7 +1,8 @@
 <Configuration>
+  <!-- Update HostFolder to the absolute path of your local share directory -->
   <MappedFolders>
     <MappedFolder>
-      <HostFolder>C:\MySandboxShare</HostFolder>
+      <HostFolder>C:\path\to\your\share</HostFolder>
       <SandboxFolder>C:\Shared</SandboxFolder>
       <ReadOnly>false</ReadOnly>
     </MappedFolder>
