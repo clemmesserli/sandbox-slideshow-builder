@@ -20,9 +20,11 @@ source assets → ImageMagick (compose/overlay frames) → PNG frames → FFmpeg
 
 ## Requirements
 
-- Windows 10/11 with [Windows Sandbox enabled](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview)
+- Windows 10/11 **Pro, Enterprise, or Education** — Windows Sandbox is not available on Home editions
+- [Windows Sandbox enabled](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview) — an optional Windows feature, not on by default. `Start-Sandbox.ps1` will detect if it's missing and offer to enable it (requires a reboot)
+- Virtualization enabled in BIOS/UEFI
 - PowerShell 5.1+
-- Internet access (tools are downloaded on first run)
+- Internet access (tools are downloaded on first run inside the sandbox)
 
 ## Usage
 
