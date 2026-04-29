@@ -36,7 +36,7 @@ For a text file (one entry per line):
 .\Start-Sandbox.ps1 -SharePath "C:\YourShareFolder" -InputPath "C:\Downloads\Quotes.txt"
 ```
 
-For a folder of images:
+For a folder of images *(future release — image pipeline not yet implemented)*:
 
 ```powershell
 .\Start-Sandbox.ps1 -SharePath "C:\YourShareFolder" -InputPath "C:\Pics\Gallery01"
@@ -57,7 +57,7 @@ Explorer will open automatically when processing is complete.
 | File | Description |
 |---|---|
 | `images\frame_NNN.png` | Generated PNG frames (build artifacts, gitignored) |
-| `output.mp4` | Final encoded slideshow video (gitignored) |
+| `slideshow.mp4` | Final encoded slideshow video (gitignored) |
 | `sandbox_log.txt` | Full transcript log from the sandbox run (gitignored) |
 
 ## Customization
