@@ -6,6 +6,27 @@ param(
 	[string]$InputPath
 )
 
+# =============================
+# Preflight: Windows Sandbox
+# =============================
+$edition = (Get-WindowsEdition -Online).Edition
+if ($edition -like '*Home*') {
+	Write-Error "Windows Sandbox is not available on Home editions (detected: $edition). Pro, Enterprise, or Education required."
+	exit
+}
+
+$sandboxFeature = Get-WindowsOptionalFeature -Online -FeatureName 'WindowsSandbox'
+if ($sandboxFeature.State -ne 'Enabled') {
+	$response = Read-Host "Windows Sandbox is not enabled. Enable it now? A reboot will be required. (y/n)"
+	if ($response -eq 'y') {
+		Enable-WindowsOptionalFeature -Online -FeatureName 'WindowsSandbox' -All -NoRestart
+		Write-Host "[OK] Windows Sandbox enabled. Please reboot and re-run this script."
+	} else {
+		Write-Host "Aborted. Enable Windows Sandbox manually and re-run."
+	}
+	exit
+}
+
 # Validate InputPath
 if (!(Test-Path $InputPath)) {
 	Write-Error "InputPath not found: $InputPath"
