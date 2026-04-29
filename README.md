@@ -1,5 +1,7 @@
 # sandbox-slideshow-builder
 
+https://github.com/user-attachments/assets/4157b520-4221-474d-8fdf-907361dbd552
+
 A Windows Sandbox-based framework that transforms a set of source assets into a styled MP4 slideshow video. All processing runs inside an isolated Windows Sandbox — nothing is installed on your host machine.
 
 ## How It Works
