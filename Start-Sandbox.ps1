@@ -17,7 +17,7 @@ New-Item -ItemType Directory -Force -Path $SharePath | Out-Null
 Write-Host "[OK] Share folder ready: $SharePath"
 
 # Copy framework files
-foreach ($file in @('LetsPlay.ps1', 'sandbox.wsb')) {
+foreach ($file in @('Invoke-SlideshowBuilder.ps1', 'sandbox.wsb')) {
 	$src = Join-Path $PSScriptRoot $file
 	if (!(Test-Path $src)) { Write-Error "Missing framework file: $src"; exit }
 	Copy-Item $src -Destination $SharePath -Force

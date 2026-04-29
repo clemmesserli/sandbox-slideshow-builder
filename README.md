@@ -10,7 +10,7 @@ source assets → ImageMagick (compose/overlay frames) → PNG frames → FFmpeg
 
 1. `Start-Sandbox.ps1` launches a Windows Sandbox using `sandbox.wsb`
 2. The sandbox mounts your local share folder as `C:\Shared`
-3. `LetsPlay.ps1` runs automatically on sandbox login and:
+3. `Invoke-SlideshowBuilder.ps1` runs automatically on sandbox login and:
    - Downloads and installs VC++ Runtime, 7-Zip, ImageMagick, and FFmpeg
    - Processes your source assets into PNG frames (parallelized)
    - Encodes all frames into an MP4 slideshow
@@ -60,10 +60,10 @@ Explorer will open automatically when processing is complete.
 
 | Variable | Location | Description |
 |---|---|---|
-| `$width` / `$height` | `LetsPlay.ps1` | Output frame resolution (default: 1280x720) |
-| `-framerate` | `LetsPlay.ps1` | Seconds per frame (default: `0.33` ≈ 3s per slide) |
-| `-pointsize` | `LetsPlay.ps1` | Font size for text overlays |
-| Background gradient | `LetsPlay.ps1` | ImageMagick gradient colors |
+| `$width` / `$height` | `Invoke-SlideshowBuilder.ps1` | Output frame resolution (default: 1280x720) |
+| `-framerate` | `Invoke-SlideshowBuilder.ps1` | Seconds per frame (default: `0.33` ≈ 3s per slide) |
+| `-pointsize` | `Invoke-SlideshowBuilder.ps1` | Font size for text overlays |
+| Background gradient | `Invoke-SlideshowBuilder.ps1` | ImageMagick gradient colors |
 
 ## Use Cases
 

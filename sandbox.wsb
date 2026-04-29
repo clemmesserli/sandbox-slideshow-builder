@@ -9,6 +9,6 @@
   </MappedFolders>
 
   <LogonCommand>
-    <Command>powershell.exe -ExecutionPolicy Bypass -File C:\Shared\LetsPlay.ps1</Command>
+    <Command>powershell.exe -ExecutionPolicy Bypass -File C:\Shared\Invoke-SlideshowBuilder.ps1</Command>
   </LogonCommand>
 </Configuration>
