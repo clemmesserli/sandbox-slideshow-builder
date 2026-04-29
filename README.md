@@ -44,7 +44,7 @@ For a folder of images:
 
 The script will:
 - Create `-SharePath` if it doesn't exist
-- Copy `LetsPlay.ps1` and `sandbox.wsb` into the share folder
+- Copy `Invoke-SlideshowBuilder.ps1` and `sandbox.wsb` into the share folder
 - Copy a text file as `input.txt`, or copy image folder contents into `images\`
 - Patch and launch the sandbox automatically
 
