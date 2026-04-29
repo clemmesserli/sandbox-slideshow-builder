@@ -1,0 +1,11 @@
+# Generated images (build artifacts)
+images/
+
+# Output video
+*.mp4
+
+# Input data (user-supplied)
+*.txt
+
+# Sandbox logs
+*_log*.txt
