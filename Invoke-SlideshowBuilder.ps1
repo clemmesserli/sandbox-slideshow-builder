@@ -12,7 +12,8 @@ $imgDir = Join-Path $shared "images"
 New-Item -ItemType Directory -Force -Path $tools  | Out-Null
 New-Item -ItemType Directory -Force -Path $imgDir | Out-Null
 
-$logFile = Join-Path $shared "sandbox_log.txt"
+$timestamp = (Get-Date).ToString('yyyyMMdd_HHmmss')
+$logFile = Join-Path $shared "sandbox_log_$timestamp.txt"
 
 Start-Transcript -Path $logFile -Force
 

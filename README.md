@@ -58,7 +58,7 @@ Explorer will open automatically when processing is complete.
 |---|---|
 | `images\frame_NNN.png` | Generated PNG frames (build artifacts, gitignored) |
 | `slideshow.mp4` | Final encoded slideshow video (gitignored) |
-| `sandbox_log.txt` | Full transcript log from the sandbox run (gitignored) |
+| `sandbox_log_YYYYMMDD_HHmmss.txt` | Full transcript log from the sandbox run — one file per run (gitignored) |
 
 ## Customization
 
