@@ -1,6 +1,4 @@
-# =============================
-# Setup + Logging
-# =============================
+#region Setup + Logging
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "Continue"
 $VerbosePreference = "Continue"
@@ -26,10 +24,9 @@ function Write-Step {
 	$elapsed = (Measure-Command { & $Action }).TotalSeconds
 	Write-Host ("[DONE] $Label ({0:N1}s)" -f $elapsed)
 }
+#endregion
 
-# =============================
-# Helper: Download with retry + skip
-# =============================
+#region Helper: Download with retry + skip
 function Deploy-File {
 	param (
 		[string]$Url,
@@ -62,14 +59,14 @@ function Deploy-File {
 	throw "[FAIL] Failed to download after $Retries attempts: $Url"
 }
 
-# =============================
-# Network init
-# =============================
+#endregion
+
+#region Network init
 Write-Step 'Network init' { Start-Sleep -Seconds 5 }
 
-# =============================
-# Install VC++ Runtime
-# =============================
+#endregion
+
+#region Install VC++ Runtime
 $vcUrl = "https://aka.ms/vs/17/release/vc_redist.x64.exe"
 $vcExe = "$tools\vc_redist.x64.exe"
 
@@ -90,17 +87,17 @@ Write-Step 'Install VC++' {
 	}
 }
 
-# =============================
-# 7-Zip Setup (idempotent)
-# =============================
+#endregion
+
+#region 7-Zip Setup
 $sevenZipExe = "$tools\7zr.exe"
 Write-Step 'Download 7-Zip' { Deploy-File "https://www.7-zip.org/a/7zr.exe" $sevenZipExe }
 
 if (!(Test-Path $sevenZipExe)) { throw "7zr.exe missing" }
 
-# =============================
-# ImageMagick (.7z)
-# =============================
+#endregion
+
+#region ImageMagick
 $imUrl = "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-21/ImageMagick-7.1.2-21-portable-Q16-x64.7z"
 $imArchive = "$tools\imagemagick.7z"
 $imExtract = "$tools\imagemagick"
@@ -119,9 +116,9 @@ Write-Step 'Extract ImageMagick' {
 $magick = Get-ChildItem $imExtract -Recurse -Filter magick.exe | Select-Object -First 1
 if (-not $magick) { throw "magick.exe not found" }
 
-# =============================
-# FFmpeg (.zip)
-# =============================
+#endregion
+
+#region FFmpeg
 $ffUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
 $ffZip = "$tools\ffmpeg.zip"
 $ffExtract = "$tools\ffmpeg"
@@ -140,9 +137,37 @@ Write-Step 'Extract FFmpeg' {
 $ffmpeg = Get-ChildItem $ffExtract -Recurse -Filter ffmpeg.exe | Select-Object -First 1
 if (-not $ffmpeg) { throw "ffmpeg.exe not found" }
 
-# =============================
-# Load Input
-# =============================
+
+#endregion
+
+#region VS Code Setup
+$vsCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64-user/stable"
+$vsCodeInstaller = "$tools\VSCodeUserSetup-x64.exe"
+$vsCodeExe = Join-Path $env:LocalAppData "Programs\Microsoft VS Code\Code.exe"
+
+Write-Step 'Download VS Code' { Deploy-File $vsCodeUrl $vsCodeInstaller }
+
+Write-Step 'Install VS Code' {
+	if (Test-Path $vsCodeExe) {
+		Write-Host "Skipping VS Code install (already installed)"
+	} else {
+		Write-Host "Installing VS Code (this may take 30-90 seconds)..."
+		$proc = Start-Process $vsCodeInstaller -ArgumentList '/verysilent', '/suppressmsgboxes', '/mergetasks=!runcode' -PassThru
+		while (-not $proc.HasExited) {
+			Write-Host "  ...VS Code install in progress"
+			Start-Sleep -Seconds 10
+		}
+		Write-Host "VS Code install exited with code: $($proc.ExitCode)"
+	}
+}
+
+if (-not (Test-Path $vsCodeExe)) { throw "VS Code installation failed (Code.exe not found)" }
+
+
+
+#endregion
+
+#region Load Input
 $inputFile = Join-Path $shared "input.txt"
 
 if (!(Test-Path $inputFile)) { throw "input.txt not found" }
@@ -153,9 +178,9 @@ if ($quotes.Count -eq 0) { throw "input.txt is empty" }
 
 Write-Host "Loaded $($quotes.Count) items"
 
-# =============================
-# Generate PNGs
-# =============================
+#endregion
+
+#region Generate PNGs
 $width = 1280
 $height = 720
 
@@ -226,9 +251,9 @@ Write-Step 'Generate PNGs' {
 	}
 }
 
-# =============================
-# Generate Video (idempotent)
-# =============================
+#endregion
+
+#region Generate Video
 $videoOut = Join-Path $shared "slideshow.mp4"
 
 Write-Step 'Generate Video' {
@@ -255,12 +280,23 @@ Write-Step 'Generate Video' {
 	}
 }
 
-# =============================
-# Done
-# =============================
-$totalElapsed = [math]::Round(((Get-Date) - $scriptStart).TotalSeconds, 1)
-Write-Host "=== COMPLETE === Total elapsed: ${totalElapsed}s"
+#endregion
 
-Start-Process explorer.exe $shared
+#region Done
+$totalElapsed = [math]::Round(((Get-Date) - $scriptStart).TotalSeconds, 1)
+$hours = [math]::Floor($totalElapsed / 3600)
+$minutes = [math]::Floor(($totalElapsed % 3600) / 60)
+$seconds = [math]::Round(($totalElapsed % 60), 1)
+
+Write-Host "=== COMPLETE ==="
+Write-Host "Total Elapsed:"
+Write-Host ("Hours:   {0,5:N1}" -f [double]$hours)
+Write-Host ("Minutes: {0,5:N1}" -f [double]$minutes)
+Write-Host ("Seconds: {0,5:N1}" -f $seconds)
+
+if (Test-Path $vsCodeExe) {
+	Start-Process $vsCodeExe -ArgumentList "--disable-workspace-trust", "`"$shared`""
+}
+#endregion
 
 Stop-Transcript
